@@ -56,7 +56,7 @@ This is what makes Flash superior to static troubleshooters.
 Every decision node is indexed by ID → reference mapping. Expansion and traversal never require tree reconstruction.  
 
 ### 🌐 4. Multi-user Safe by Design  
-Each session stores user progress independently — allowing unlimited parallel usage.  
+Each session stores user progress independently and locally — allowing unlimited parallel usage.  
 
 ---  
 
@@ -102,7 +102,7 @@ Mac/Linux:
 ### ▶ Run the application
 
 ```bash
-java -jar target/*.jar
+.\mvnw spring-boot:run
 ```
 
 ### 🌍 Open in Browser
@@ -133,7 +133,7 @@ src/main/java/com/example/demo/
 Tree data stored in:
 
 ```
-src/main/resources/tree.json
+src/main/resources/data/*.json
 ```
 
 ---
@@ -184,15 +184,9 @@ Then open a PR.
 
 ---
 
-## 📜 License
-
-This project is licensed under the MIT License.
-
----
-
 ## 🌟 Final Notes
 
-Flash isn’t just a Yes/No tree — it’s a **learning system**.
+Flash isn’t just a Yes/No tree, it’s a **learning system**.
 Every admin update makes Flash:
 
 * smarter
@@ -200,5 +194,5 @@ Every admin update makes Flash:
 * richer
 * more accurate
 
-What starts small becomes an automated support engine.
-User by user. Question by question.
+>What starts small becomes an automated support engine.
+>User by user. Question by question.
