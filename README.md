@@ -1,18 +1,16 @@
-# ⚡ Flash: Automated "Yes/No" Troubleshooter  
+## ⚡ flash: automated troubleshooter  
 
-> **Project:** A self-evolving decision engine designed to automate troubleshooting workflows and reduce customer support load.  
+> A self-evolving decision engine designed to automate troubleshooting workflows and reduce customer support load.  
 
-Flash is an intelligent troubleshooting system powered by an ever-growing **Binary Decision Tree**. Users are guided through dynamic Yes/No questions until they reach a final solution.  
+Flash is an intelligent troubleshooting system powered by an ever-growing **Binary Decision Tree**. Users are guided through dynamic Yes/No questions until they reach a final solution. 
 
 But unlike traditional troubleshooters, Flash introduces a breakthrough:  
-### 🔥 Admin-driven Dynamic Knowledge Expansion  
-Any solution node can be **converted into a question** with two new outcomes — instantly expanding the tree. No coding. No server restarts. No downtime.  
-
-Flash becomes smarter every time an admin interacts with it.  
+#### 🔥 Admin-driven Dynamic Knowledge Expansion  
+Any solution node can be **converted into a question** with two new outcomes — instantly expanding the tree. No coding. No server restarts. No downtime.  Flash becomes smarter every time an admin interacts with it.  
 
 ---  
 
-## 🧠 Why Flash Exists  
+## Why Flash Exists  
 Companies pay heavily for support agents to repeatedly solve common issues. Flash replaces repetitive tickets with an intelligent, automated system that:  
 
 - ❓ asks structured diagnostic questions  
@@ -22,27 +20,15 @@ Companies pay heavily for support agents to repeatedly solve common issues. Flas
 
 The result: faster resolutions, lower support cost, and continuously improving logic.  
 
----  
-
-## 🏆 Rubric Alignment  
-
-| Category | Implementation Detail | Source File |
-| :--- | :--- | :--- |
-| **DSA Logic (10 pts)** | Binary Decision Tree with dynamic node mutation + HashMap lookup for O(1) access | `TreeService.java` |
-| **OOPS Logic (10 pts)** | Abstract class hierarchy: `Node` → `QuestionNode` / `SolutionNode` | `Node.java` |
-| **Web Tech (7 pts)** | Spring Boot + Thymeleaf UI with session-based navigation | `TroubleshooterController.java` |
-| **Data Handling** | Jackson polymorphic JSON deserialization + persistence | `tree.json` |  
-
-Flash directly satisfies every technical requirement with clean architecture and scalable logic.  
 
 ---  
 
-## 🚀 Core Features  
+## Core Features  
 
-### 🧭 1. Interactive Troubleshooting Flow  
+### 1. Interactive Troubleshooting Flow  
 Users answer Yes/No inputs through a clean, responsive UI. Flash tracks their progress until a solution is reached. Session-based state means multiple users can troubleshoot independently.  
 
-### 🧩 2. Dynamic Tree Expansion (The Innovation)  
+### 2. Dynamic Tree Expansion (The Innovation)  
 Admins can modify a leaf node in real-time:  
 
 1. Select a solution node  
@@ -52,15 +38,15 @@ Admins can modify a leaf node in real-time:
 
 This is what makes Flash superior to static troubleshooters.  
 
-### ⚡ 3. O(1) Node Access via Lookup Table  
+###  3. O(1) Node Access via Lookup Table  
 Every decision node is indexed by ID → reference mapping. Expansion and traversal never require tree reconstruction.  
 
-### 🌐 4. Multi-user Safe by Design  
-Each session stores user progress independently and locally — allowing unlimited parallel usage.  
+### 4. Multi-user Safe by Design  
+Each session stores user progress independently — allowing unlimited parallel usage.  
 
 ---  
 
-## 🛠️ Tech Stack  
+## Tech Stack  
 
 | Layer | Technology |
 | :--- | :--- |
@@ -69,7 +55,7 @@ Each session stores user progress independently and locally — allowing unlimit
 | **Frontend** | Thymeleaf + Bootstrap 5 |
 | **Data Parsing** | Jackson |
 | **Build Tool** | Maven |
-| **Quality of Life** | Lombok, DevTools |  
+| **Other** | Lombok, DevTools |  
 
 ---  
 
@@ -166,7 +152,7 @@ This demonstrates successful dynamic mutation of the Binary Decision Tree.
 * Unlimited branching depth
 * Zero-downtime knowledge growth
 
-Flash remains fast — even at scale.
+Flash remains fast.
 
 ---
 
@@ -184,7 +170,7 @@ Then open a PR.
 
 ---
 
-## 🌟 Final Notes
+## Final Notes
 
 Flash isn’t just a Yes/No tree, it’s a **learning system**.
 Every admin update makes Flash:

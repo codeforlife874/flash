@@ -32,6 +32,7 @@ public class TreeService {
     private String rootNodeId;
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, StoredTree> storedTrees = new LinkedHashMap<>();
+    private final Map<String, String> storedTreeLabels = new LinkedHashMap<>();
     private String activeTreeName;
 
     public ConcurrentHashMap<String, DecisionNode> getNodeRegistry() {
@@ -63,6 +64,9 @@ public class TreeService {
                 if (stored != null) {
                     String name = res.getFilename();
                     storedTrees.put(name, stored);
+                    // compute a friendly label from the stored nodes (root node text)
+                    String label = computeLabelForStoredTree(stored);
+                    storedTreeLabels.put(name, label == null ? name : label);
                 }
             } catch (Exception ex) {
                 // ignore malformed files for now
@@ -75,8 +79,9 @@ public class TreeService {
             if (r.exists()) {
                 StoredTree stored = mapper.readValue(r.getInputStream(), StoredTree.class);
                 if (stored != null) {
-                    storedTrees.put("tree.json", stored);
-                }
+                            storedTrees.put("tree.json", stored);
+                            storedTreeLabels.put("tree.json", computeLabelForStoredTree(stored));
+                        }
             }
         }
 
@@ -85,6 +90,22 @@ public class TreeService {
         if (first.isPresent()) {
             selectTree(first.get());
         }
+    }
+
+    private String computeLabelForStoredTree(StoredTree stored) {
+        if (stored == null) return null;
+        String rootId = stored.getRootId();
+        if (rootId == null) return null;
+        if (stored.getNodes() == null) return null;
+        for (DecisionNode n : stored.getNodes()) {
+            if (rootId.equals(n.getId())) {
+                String t = n.getText();
+                if (t == null) return null;
+                // shorten if very long
+                return t.length() > 60 ? t.substring(0, 57) + "..." : t;
+            }
+        }
+        return null;
     }
 
     /**
@@ -170,6 +191,10 @@ public class TreeService {
 
     public Set<String> getAvailableTreeNames() {
         return Collections.unmodifiableSet(storedTrees.keySet());
+    }
+
+    public Map<String, String> getAvailableTreeLabels() {
+        return Collections.unmodifiableMap(storedTreeLabels);
     }
 
     public synchronized boolean expandLeaf(String targetLeafId, String newQuestionText, String yesSolText, String noSolText) {

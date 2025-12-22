@@ -18,7 +18,7 @@
             <div class="text-2xl">⚡</div>
             <div class="text-lg font-semibold">Flash Troubleshooter</div>
         </div>
-        <div class="text-sm text-gray-300">Tree: <span th:text="${activeTree}">default</span></div>
+       <!-- <div class="text-sm text-gray-300">Tree: <span th:text="${activeTree}">default</span></div>-->
     </header>
 
     <!-- Chat area -->
@@ -80,7 +80,7 @@
 
                 <!-- Solution controls -->
                 <div th:if="${isStarted} and ${isSolution}" class="mt-3">
-                    <div class="flex gap-3">
+                    <div class="flex g  ap-3">
                         <a th:href="@{/restart}" class="flex-1 text-center bg-purple-700 text-white py-3 rounded-2xl font-semibold">Restart</a>
                         <button type="button" id="adminToggle" class="px-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl">Improve</button>
                     </div>
@@ -116,7 +116,8 @@
 <!-- Scripts: autocomplete, suggestion rendering, admin toggle -->
 <script th:inline="javascript">
 /*<![CDATA[*/
-    var trees = [[${availableTrees}]];
+    var treeList = /*[[${availableTreesList}]]*/ [];
+    var treeMap = /*[[${availableTreesMap}]]*/ {};
 /*]]>*/
 </script>
 <script>
@@ -132,7 +133,7 @@ function showSuggestions(list) {
     list.slice(0,10).forEach(item => {
         const li = document.createElement('li');
         li.className = 'px-4 py-2 hover:bg-gray-700 cursor-pointer text-sm';
-        li.textContent = item;
+        li.textContent = treeMap[item] || item;
         li.addEventListener('click', ()=>{
             // set hidden and submit to start selected tree
             hidden.value = item;
@@ -150,7 +151,7 @@ function showSuggestions(list) {
 input && input.addEventListener('input', (e)=>{
     const v = e.target.value.trim().toLowerCase();
     if (!v) { sugg.classList.add('hidden'); hidden.value=''; return; }
-    const matches = trees.filter(t => t.toLowerCase().includes(v));
+    const matches = treeList.filter(t => (treeMap[t] || t).toLowerCase().includes(v));
     showSuggestions(matches);
 });
 
@@ -161,7 +162,7 @@ startForm && startForm.addEventListener('submit', (ev)=>{
     const v = input.value.trim();
     if (!v) return;
     // find best match
-    const match = trees.find(t=>t.toLowerCase()===v.toLowerCase()) || trees.find(t=>t.toLowerCase().includes(v.toLowerCase()));
+    const match = treeList.find(t=>t.toLowerCase()===v.toLowerCase()) || treeList.find(t=>t.toLowerCase().includes(v.toLowerCase()));
     if (match) {
         const payload = new FormData(); payload.append('treeName', match);
         fetch(startForm.getAttribute('action'), { method: 'post', body: payload })

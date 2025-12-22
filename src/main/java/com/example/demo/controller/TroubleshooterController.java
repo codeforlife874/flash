@@ -28,6 +28,8 @@ public class TroubleshooterController {
         if (started == null || !started) {
             model.addAttribute("isStarted", false);
             model.addAttribute("availableTrees", treeService.getAvailableTreeNames());
+            model.addAttribute("availableTreesMap", treeService.getAvailableTreeLabels());
+            model.addAttribute("availableTreesList", treeService.getAvailableTreeNames());
             model.addAttribute("activeTree", treeService.getActiveTreeName());
             return "index";
         }
@@ -50,6 +52,8 @@ public class TroubleshooterController {
         model.addAttribute("isSolution", node instanceof SolutionNode);
         model.addAttribute("activeTree", treeService.getActiveTreeName());
         model.addAttribute("availableTrees", treeService.getAvailableTreeNames());
+        model.addAttribute("availableTreesMap", treeService.getAvailableTreeLabels());
+        model.addAttribute("availableTreesList", treeService.getAvailableTreeNames());
         return "index";
     }
 
