@@ -1,0 +1,22 @@
+{
+  "rootId": "root-q-1",
+  "nodes": [
+    {
+      "type": "question",
+      "id": "root-q-1",
+      "text": "Is the device powering on?",
+      "yesNodeId": "sol-yes-power",
+      "noNodeId": "sol-no-power"
+    },
+    {
+      "type": "solution",
+      "id": "sol-yes-power",
+      "text": "Great — device is powered. Try restarting the app."
+    },
+    {
+      "type": "solution",
+      "id": "sol-no-power",
+      "text": "Please connect the power cable and try again."
+    }
+  ]
+}
