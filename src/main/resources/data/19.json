@@ -1,0 +1,45 @@
+{
+  "text": "Is the phone battery charged?",
+  "yesChild": {
+    "text": "Does the screen show any signs of life?",
+    "yesChild": {
+      "text": "Does the phone vibrate, blink, or beep?",
+      "yesChild": {
+        "text": "Do buttons respond when pressed?",
+        "yesChild": {
+          "text": "Is the display cracked?",
+          "yesChild": { "text": "Screen damaged — replace display." },
+          "noChild": {
+            "text": "Was there recent software update?",
+            "yesChild": { "text": "Software crash — hard reset device." },
+            "noChild": {
+              "text": "Does the phone power on using charger?",
+              "yesChild": { "text": "Battery issue — replace battery." },
+              "noChild": {
+                "text": "Does the phone boot into recovery mode?",
+                "yesChild": { "text": "Restore operating system." },
+                "noChild": {
+                  "text": "Is there water damage?",
+                  "yesChild": { "text": "Dry device — service needed." },
+                  "noChild": { "text": "Mainboard failure — repair required." }
+                }
+              }
+            }
+          }
+        },
+        "noChild": { "text": "Button failure — service required." }
+      },
+      "noChild": {
+        "text": "Does the phone charge using a cable?",
+        "yesChild": { "text": "Display failure — replace screen." },
+        "noChild": { "text": "Charging circuit failure — repair needed." }
+      }
+    },
+    "noChild": {
+      "text": "Is the phone detected by computer?",
+      "yesChild": { "text": "Display failure — replace screen." },
+      "noChild": { "text": "Power IC failure — service needed." }
+    }
+  },
+  "noChild": { "text": "Charge phone for 30 minutes and retry power button." }
+}

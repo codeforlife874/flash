@@ -1,0 +1,41 @@
+{
+  "text": "Is the printer powered on?",
+  "yesChild": {
+    "text": "Is there paper in the tray?",
+    "yesChild": {
+      "text": "Are ink or toner levels sufficient?",
+      "yesChild": {
+        "text": "Is there a paper jam?",
+        "yesChild": { "text": "Clear paper jam and restart printer." },
+        "noChild": {
+          "text": "Is the printer connected to the computer?",
+          "yesChild": {
+            "text": "Is this the default printer?",
+            "yesChild": {
+              "text": "Does a test page print?",
+              "yesChild": { "text": "App issue — try different document." },
+              "noChild": {
+                "text": "Are printer drivers updated?",
+                "yesChild": {
+                  "text": "Are you using Wi-Fi?",
+                  "yesChild": {
+                    "text": "Is Wi-Fi stable?",
+                    "yesChild": { "text": "Printer hardware malfunction — service needed." },
+                    "noChild": { "text": "Reset Wi-Fi and reconnect printer." }
+                  },
+                  "noChild": { "text": "USB cable faulty — replace cable." }
+                },
+                "noChild": { "text": "Update printer drivers and restart." }
+              }
+            },
+            "noChild": { "text": "Set printer as default in system settings." }
+          },
+          "noChild": { "text": "Reconnect printer to computer." }
+        }
+      },
+      "noChild": { "text": "Refill ink/toner cartridges." }
+    },
+    "noChild": { "text": "Insert paper in the tray." }
+  },
+  "noChild": { "text": "Turn ON the printer." }
+}

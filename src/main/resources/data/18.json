@@ -1,0 +1,37 @@
+{
+  "text": "Is today past the delivery date?",
+  "yesChild": {
+    "text": "Is tracking information available?",
+    "yesChild": {
+      "text": "Is the package moving in transit?",
+      "yesChild": {
+        "text": "Is the shipment delayed due to weather?",
+        "yesChild": { "text": "Delivery delayed — wait for update." },
+        "noChild": {
+          "text": "Has courier attempted delivery?",
+          "yesChild": {
+            "text": "Was the address incorrect?",
+            "yesChild": { "text": "Correct address with courier." },
+            "noChild": {
+              "text": "Has the package been lost?",
+              "yesChild": { "text": "Request refund or replacement." },
+              "noChild": {
+                "text": "Package held at local facility?",
+                "yesChild": { "text": "Pick up at courier facility." },
+                "noChild": { "text": "Contact courier support." }
+              }
+            }
+          },
+          "noChild": { "text": "Courier has not attempted delivery — wait or contact support." }
+        }
+      },
+      "noChild": { "text": "Package stuck in transit — contact courier." }
+    },
+    "noChild": { "text": "Order processing — not shipped yet." }
+  },
+  "noChild": {
+    "text": "Is delivery window open?",
+    "yesChild": { "text": "Wait until delivery date passes." },
+    "noChild": { "text": "Unexpected delay — contact seller." }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "text": "Is the inbox full?",
+  "yesChild": { "text": "Delete emails to free up space." },
+  "noChild": {
+    "text": "Is the email address spelled correctly?",
+    "yesChild": {
+      "text": "Is the email in spam folder?",
+      "yesChild": { "text": "Mark sender as safe." },
+      "noChild": {
+        "text": "Is internet connection active?",
+        "yesChild": {
+          "text": "Is email syncing enabled?",
+          "yesChild": {
+            "text": "Is the email app updated?",
+            "yesChild": {
+              "text": "Do emails arrive on another device?",
+              "yesChild": {
+                "text": "Are server settings correct?",
+                "yesChild": {
+                  "text": "Are filters or rules blocking mail?",
+                  "yesChild": { "text": "Remove or adjust filters." },
+                  "noChild": { "text": "Contact mail provider — inbox routing issue." }
+                },
+                "noChild": { "text": "Device/app problem — reinstall email app." }
+              },
+              "noChild": { "text": "Server-wide issue — wait and retry." }
+            },
+            "noChild": { "text": "Update the email app." }
+          },
+          "noChild": { "text": "Enable email syncing." }
+        },
+        "noChild": { "text": "Connect to internet." }
+      }
+    },
+    "noChild": { "text": "Correct the email spelling." }
+  }
+}

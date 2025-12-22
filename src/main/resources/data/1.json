@@ -1,0 +1,45 @@
+{
+  "text": "Is the router powered on?",
+  "yesChild": {
+    "text": "Is the power LED stable?",
+    "yesChild": {
+      "text": "Is the internet LED blinking?",
+      "yesChild": {
+        "text": "Can any device connect to Wi-Fi?",
+        "yesChild": {
+          "text": "Can a website load?",
+          "yesChild": {
+            "text": "Is the speed slow?",
+            "yesChild": {
+              "text": "Are multiple people streaming/gaming?",
+              "yesChild": { "text": "Bandwidth overload — reduce usage." },
+              "noChild": { "text": "ISP speed issue — contact provider." }
+            },
+            "noChild": {
+              "text": "Is router too hot?",
+              "yesChild": { "text": "Overheating — turn off 5 minutes." },
+              "noChild": {
+                "text": "Has router firmware been updated?",
+                "yesChild": { "text": "Router hardware fault — support needed." },
+                "noChild": { "text": "Update firmware." }
+              }
+            }
+          },
+          "noChild": {
+            "text": "Does another device load websites?",
+            "yesChild": { "text": "Device issue — reset network." },
+            "noChild": { "text": "ISP outage — call provider." }
+          }
+        },
+        "noChild": { "text": "Wi-Fi off — enable Wi-Fi." }
+      },
+      "noChild": {
+        "text": "Are cables firmly connected?",
+        "yesChild": { "text": "Router hardware failure." },
+        "noChild": { "text": "Reconnect cables." }
+      }
+    },
+    "noChild": { "text": "Power adapter issue — replace." }
+  },
+  "noChild": { "text": "Turn router ON." }
+}

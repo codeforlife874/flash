@@ -1,0 +1,41 @@
+{
+  "text": "Is there enough fuel?",
+  "yesChild": {
+    "text": "Is the battery charged?",
+    "yesChild": {
+      "text": "Do you hear a clicking sound when turning the key?",
+      "yesChild": {
+        "text": "Are the headlights dim?",
+        "yesChild": { "text": "Alternator issue — service required." },
+        "noChild": { "text": "Starter motor failure — repair needed." }
+      },
+      "noChild": {
+        "text": "Is the engine cranking?",
+        "yesChild": {
+          "text": "Is the oil level sufficient?",
+          "yesChild": {
+            "text": "Any dashboard warning lights?",
+            "yesChild": { "text": "Diagnose based on warning indicator." },
+            "noChild": {
+              "text": "Is the gear in park/neutral?",
+              "yesChild": {
+                "text": "Is the key fob battery working?",
+                "yesChild": { "text": "ECU or ignition issue — service required." },
+                "noChild": { "text": "Replace key fob battery." }
+              },
+              "noChild": { "text": "Shift to park/neutral and retry." }
+            }
+          },
+          "noChild": { "text": "Low oil — system may prevent start." }
+        },
+        "noChild": {
+          "text": "Is brake pedal pressed firmly?",
+          "yesChild": { "text": "Ignition coil failure — service needed." },
+          "noChild": { "text": "Press brake pedal fully and retry start." }
+        }
+      }
+    },
+    "noChild": { "text": "Dead battery — replace battery." }
+  },
+  "noChild": { "text": "Refuel and retry starting the car." }
+}

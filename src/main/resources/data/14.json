@@ -1,0 +1,45 @@
+{
+  "text": "Is the connection slow on all devices?",
+  "yesChild": {
+    "text": "Is the router old or outdated?",
+    "yesChild": { "text": "Upgrade router." },
+    "noChild": {
+      "text": "Is your ISP plan low bandwidth?",
+      "yesChild": { "text": "Upgrade internet plan." },
+      "noChild": {
+        "text": "Are too many users connected?",
+        "yesChild": { "text": "Reduce connected devices." },
+        "noChild": {
+          "text": "Is router placed far from devices?",
+          "yesChild": { "text": "Move router closer." },
+          "noChild": {
+            "text": "Is router channel congested?",
+            "yesChild": { "text": "Switch Wi-Fi channel." },
+            "noChild": {
+              "text": "Is router firmware updated?",
+              "yesChild": { "text": "Contact ISP — line issue." },
+              "noChild": { "text": "Update router firmware." }
+            }
+          }
+        }
+      }
+    }
+  },
+  "noChild": {
+    "text": "Is single device slow?",
+    "yesChild": {
+      "text": "Is device storage full?",
+      "yesChild": { "text": "Free up storage." },
+      "noChild": {
+        "text": "Is VPN active?",
+        "yesChild": { "text": "Disable VPN." },
+        "noChild": {
+          "text": "Is antivirus scanning?",
+          "yesChild": { "text": "Pause antivirus scan." },
+          "noChild": { "text": "Restart device." }
+        }
+      }
+    },
+    "noChild": { "text": "Internet is normal." }
+  }
+}

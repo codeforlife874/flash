@@ -1,0 +1,29 @@
+{
+  "text": "Is the card expired?",
+  "yesChild": { "text": "Use a valid card." },
+  "noChild": {
+    "text": "Is the internet connection stable?",
+    "yesChild": {
+      "text": "Are there sufficient funds?",
+      "yesChild": {
+        "text": "Is the CVV entered correctly?",
+        "yesChild": {
+          "text": "Is the billing address correct?",
+          "yesChild": {
+            "text": "Is bank OTP/MFA received?",
+            "yesChild": {
+              "text": "Does payment succeed on another device?",
+              "yesChild": { "text": "Browser issue — clear cache." },
+              "noChild": { "text": "Bank declined transaction — contact support." }
+            },
+            "noChild": { "text": "OTP blocked — enable messaging service." }
+          },
+          "noChild": { "text": "Correct billing address." }
+        },
+        "noChild": { "text": "Enter correct CVV." }
+      },
+      "noChild": { "text": "Insufficient funds." }
+    },
+    "noChild": { "text": "Fix internet connection and retry." }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "text": "Is the app updated to the latest version?",
+  "yesChild": {
+    "text": "Is the internet connection active?",
+    "yesChild": {
+      "text": "Is the search term correct?",
+      "yesChild": {
+        "text": "Is the search index enabled?",
+        "yesChild": {
+          "text": "Does search work for different keywords?",
+          "yesChild": {
+            "text": "Does search work on another device?",
+            "yesChild": {
+              "text": "Is app cache cleared?",
+              "yesChild": { "text": "Server-side search error — try again later." },
+              "noChild": { "text": "Clear app cache and retry search." }
+            },
+            "noChild": { "text": "Device-specific search issue — restart device." }
+          },
+          "noChild": { "text": "Rebuild search index in app settings." }
+        },
+        "noChild": { "text": "Enable search index." }
+      },
+      "noChild": { "text": "Correct the search spelling or phrase." }
+    },
+    "noChild": { "text": "Connect to internet and retry." }
+  },
+  "noChild": { "text": "Update app and restart search." }
+}

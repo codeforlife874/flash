@@ -1,0 +1,41 @@
+{
+  "text": "Is the username correct?",
+  "yesChild": {
+    "text": "Is the password correct?",
+    "yesChild": {
+      "text": "Is CAPS LOCK off?",
+      "yesChild": {
+        "text": "Is the account locked?",
+        "yesChild": { "text": "Unlock account or contact admin." },
+        "noChild": {
+          "text": "Is network connection active?",
+          "yesChild": {
+            "text": "Are browser cookies enabled?",
+            "yesChild": {
+              "text": "Have there been multiple failed attempts?",
+              "yesChild": { "text": "Wait for lockout cooldown." },
+              "noChild": {
+                "text": "Is MFA enabled?",
+                "yesChild": {
+                  "text": "Can MFA be verified?",
+                  "yesChild": {
+                    "text": "Does login succeed on another device?",
+                    "yesChild": { "text": "Device/browser issue — clear cache." },
+                    "noChild": { "text": "Account sync problem — support needed." }
+                  },
+                  "noChild": { "text": "Reset MFA or use backup method." }
+                },
+                "noChild": { "text": "Password expired — reset password." }
+              }
+            },
+            "noChild": { "text": "Enable cookies then retry login." }
+          },
+          "noChild": { "text": "Connect to internet and retry." }
+        }
+      },
+      "noChild": { "text": "Turn CAPS LOCK off." }
+    },
+    "noChild": { "text": "Reset password." }
+  },
+  "noChild": { "text": "Re-enter username correctly." }
+}

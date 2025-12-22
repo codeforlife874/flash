@@ -1,0 +1,41 @@
+{
+  "text": "Is the charging cable securely connected?",
+  "yesChild": {
+    "text": "Does the phone show the charging icon?",
+    "yesChild": {
+      "text": "Is the battery percentage increasing?",
+      "yesChild": {
+        "text": "Are you using an original/certified charger?",
+        "yesChild": {
+          "text": "Does this cable charge another device?",
+          "yesChild": {
+            "text": "Does wireless charging work?",
+            "yesChild": {
+              "text": "Is the phone overheating?",
+              "yesChild": { "text": "Let phone cool — disable fast charging." },
+              "noChild": {
+                "text": "Is the charging port loose?",
+                "yesChild": { "text": "Charging port damaged — repair needed." },
+                "noChild": {
+                  "text": "Is an app consuming extra power?",
+                  "yesChild": { "text": "Close apps — restart phone." },
+                  "noChild": {
+                    "text": "Is the phone running the latest OS?",
+                    "yesChild": { "text": "Battery defect — replace battery." },
+                    "noChild": { "text": "Update OS and retry charging." }
+                  }
+                }
+              }
+            },
+            "noChild": { "text": "Charging port broken — service required." }
+          },
+          "noChild": { "text": "Replace charging cable." }
+        },
+        "noChild": { "text": "Use an original charger." }
+      },
+      "noChild": { "text": "Dead battery — replace battery." }
+    },
+    "noChild": { "text": "Dirty or blocked port — clean gently." }
+  },
+  "noChild": { "text": "Connect the charging cable properly." }
+}

@@ -1,0 +1,41 @@
+{
+  "text": "Are the headphones powered on?",
+  "yesChild": {
+    "text": "Are the headphones paired to the device?",
+    "yesChild": {
+      "text": "Is the volume audible?",
+      "yesChild": {
+        "text": "Are the headphones selected as audio output?",
+        "yesChild": {
+          "text": "Do wired headphones work via cable?",
+          "yesChild": {
+            "text": "Is the microphone working?",
+            "yesChild": {
+              "text": "Is noise cancellation enabled?",
+              "yesChild": { "text": "Disable noise cancellation and test audio." },
+              "noChild": {
+                "text": "Have Bluetooth drivers been updated?",
+                "yesChild": {
+                  "text": "Do the headphones work on another device?",
+                  "yesChild": {
+                    "text": "Have the headphones been reset?",
+                    "yesChild": { "text": "Hardware defect — service required." },
+                    "noChild": { "text": "Reset headphone settings and retry." }
+                  },
+                  "noChild": { "text": "Driver conflict — reinstall drivers." }
+                },
+                "noChild": { "text": "Update Bluetooth drivers and retry." }
+              }
+            },
+            "noChild": { "text": "Enable microphone permissions." }
+          },
+          "noChild": { "text": "Audio jack port damaged — try Bluetooth only." }
+        },
+        "noChild": { "text": "Switch audio output to headphones in settings." }
+      },
+      "noChild": { "text": "Increase volume on phone/device." }
+    },
+    "noChild": { "text": "Pair headphones to device." }
+  },
+  "noChild": { "text": "Turn headphones ON." }
+}

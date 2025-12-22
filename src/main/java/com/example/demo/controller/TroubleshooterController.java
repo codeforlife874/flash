@@ -1,15 +1,17 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.DecisionNode;
-import com.example.demo.model.QuestionNode;
-import com.example.demo.model.SolutionNode;
-import com.example.demo.service.TreeService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.demo.model.DecisionNode;
+import com.example.demo.model.QuestionNode;
+import com.example.demo.model.SolutionNode;
+import com.example.demo.service.TreeService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class TroubleshooterController {
@@ -37,7 +39,18 @@ public class TroubleshooterController {
         model.addAttribute("node", node);
         model.addAttribute("isQuestion", node instanceof QuestionNode);
         model.addAttribute("isSolution", node instanceof SolutionNode);
+        model.addAttribute("activeTree", treeService.getActiveTreeName());
+        model.addAttribute("availableTrees", treeService.getAvailableTreeNames());
         return "index";
+    }
+
+    @PostMapping("/selectTree")
+    public String selectTree(@RequestParam String treeName, HttpSession session) {
+        boolean ok = treeService.selectTree(treeName);
+        if (ok) {
+            session.setAttribute("currentNodeId", treeService.getRootNodeId());
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/decision")

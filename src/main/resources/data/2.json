@@ -1,0 +1,41 @@
+{
+  "text": "Are you connected to Wi-Fi?",
+  "yesChild": {
+    "text": "Is signal strength good?",
+    "yesChild": {
+      "text": "Can you ping the router?",
+      "yesChild": {
+        "text": "Can router ping Google DNS?",
+        "yesChild": {
+          "text": "Is custom DNS configured?",
+          "yesChild": { "text": "Reset DNS to automatic." },
+          "noChild": {
+            "text": "Is device date/time correct?",
+            "yesChild": {
+              "text": "Is VPN enabled?",
+              "yesChild": { "text": "Disable VPN." },
+              "noChild": {
+                "text": "Is firewall blocking internet?",
+                "yesChild": { "text": "Allow internet access." },
+                "noChild": {
+                  "text": "Did issue start after update?",
+                  "yesChild": { "text": "Rollback update." },
+                  "noChild": {
+                    "text": "Does mobile hotspot internet work?",
+                    "yesChild": { "text": "Router issue — reboot." },
+                    "noChild": { "text": "ISP outage — call ISP." }
+                  }
+                }
+              }
+            },
+            "noChild": { "text": "Fix time/date settings." }
+          }
+        },
+        "noChild": { "text": "DNS or routing issue — call ISP." }
+      },
+      "noChild": { "text": "Reset network drivers." }
+    },
+    "noChild": { "text": "Move closer to router." }
+  },
+  "noChild": { "text": "Connect to Wi-Fi network." }
+}

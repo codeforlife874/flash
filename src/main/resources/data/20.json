@@ -1,0 +1,37 @@
+{
+  "text": "Is the light switch turned on?",
+  "yesChild": {
+    "text": "Is the bulb securely screwed in?",
+    "yesChild": {
+      "text": "Is the bulb visibly damaged or burnt?",
+      "yesChild": { "text": "Replace the bulb." },
+      "noChild": {
+        "text": "Is power available at the socket?",
+        "yesChild": {
+          "text": "Does a different bulb work?",
+          "yesChild": {
+            "text": "Is the fixture warm?",
+            "yesChild": { "text": "Overheating issue — allow cooling." },
+            "noChild": {
+              "text": "Is switch plate damaged?",
+              "yesChild": { "text": "Replace switch panel." },
+              "noChild": {
+                "text": "Is house power stable?",
+                "yesChild": {
+                  "text": "Are nearby lights working?",
+                  "yesChild": { "text": "Internal fixture wiring fault — electrician required." },
+                  "noChild": { "text": "Circuit breaker tripped — reset breaker." }
+                },
+                "noChild": { "text": "Home electrical outage — check power supply." }
+              }
+            }
+          },
+          "noChild": { "text": "Socket failure — replace socket." }
+        },
+        "noChild": { "text": "Check fuse or breaker." }
+      }
+    },
+    "noChild": { "text": "Tighten bulb properly." }
+  },
+  "noChild": { "text": "Turn switch ON." }
+}

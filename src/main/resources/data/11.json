@@ -1,0 +1,33 @@
+{
+  "text": "Is Wi-Fi enabled on the console?",
+  "yesChild": {
+    "text": "Is the router powered on?",
+    "yesChild": {
+      "text": "Can other devices connect to the internet?",
+      "yesChild": {
+        "text": "Does console show error code?",
+        "yesChild": {
+          "text": "Is router rebooted recently?",
+          "yesChild": {
+            "text": "Is console firmware up to date?",
+            "yesChild": {
+              "text": "Is NAT type open/moderate?",
+              "yesChild": { "text": "ISP issue — contact provider." },
+              "noChild": { "text": "Change router NAT to open/moderate." }
+            },
+            "noChild": { "text": "Update console firmware." }
+          },
+          "noChild": { "text": "Restart router and retry." }
+        },
+        "noChild": {
+          "text": "Is console signal strength strong?",
+          "yesChild": { "text": "Server outage — try again later." },
+          "noChild": { "text": "Move console closer to router." }
+        }
+      },
+      "noChild": { "text": "Router or ISP failure — reboot modem/router." }
+    },
+    "noChild": { "text": "Turn ON router and retry." }
+  },
+  "noChild": { "text": "Enable Wi-Fi in console settings." }
+}

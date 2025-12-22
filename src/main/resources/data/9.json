@@ -1,0 +1,37 @@
+{
+  "text": "Is the TV powered on?",
+  "yesChild": {
+    "text": "Is the correct input source selected?",
+    "yesChild": {
+      "text": "Is the cable connected securely?",
+      "yesChild": {
+        "text": "Is the HDMI/AV cable damaged?",
+        "yesChild": { "text": "Replace damaged cable." },
+        "noChild": {
+          "text": "Have you tried a different HDMI port?",
+          "yesChild": {
+            "text": "Does another device display video on TV?",
+            "yesChild": {
+              "text": "Is TV firmware updated?",
+              "yesChild": {
+                "text": "Is screen brightness visible?",
+                "yesChild": {
+                  "text": "Is there audio without video?",
+                  "yesChild": { "text": "Video board failure — repair required." },
+                  "noChild": { "text": "Complete signal loss — service needed." }
+                },
+                "noChild": { "text": "Increase brightness/contrast settings." }
+              },
+              "noChild": { "text": "Update TV firmware." }
+            },
+            "noChild": { "text": "Input device fault — test another device." }
+          },
+          "noChild": { "text": "Try a different HDMI port." }
+        }
+      },
+      "noChild": { "text": "Reconnect HDMI/AV cable securely." }
+    },
+    "noChild": { "text": "Switch to correct input source." }
+  },
+  "noChild": { "text": "Turn ON the TV." }
+}

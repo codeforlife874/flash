@@ -1,0 +1,45 @@
+{
+  "text": "Do the fans spin?",
+  "yesChild": {
+    "text": "Do you hear BIOS beeps?",
+    "yesChild": { "text": "Identify beep pattern — failing hardware." },
+    "noChild": {
+      "text": "Is display cable connected?",
+      "yesChild": {
+        "text": "Does monitor show input source?",
+        "yesChild": {
+          "text": "Is BIOS screen visible?",
+          "yesChild": {
+            "text": "Is hard drive detected?",
+            "yesChild": {
+              "text": "Does OS start loading?",
+              "yesChild": {
+                "text": "Does it crash during boot?",
+                "yesChild": { "text": "Corrupt OS — repair OS." },
+                "noChild": {
+                  "text": "External devices connected?",
+                  "yesChild": { "text": "Remove USB devices." },
+                  "noChild": {
+                    "text": "Was BIOS reset?",
+                    "yesChild": { "text": "Motherboard failure." },
+                    "noChild": { "text": "Reset BIOS." }
+                  }
+                }
+              },
+              "noChild": { "text": "Missing OS — reinstall OS." }
+            },
+            "noChild": { "text": "Reconnect storage cables." }
+          },
+          "noChild": { "text": "GPU/mainboard fault — repair." }
+        },
+        "noChild": { "text": "Switch input source." }
+      },
+      "noChild": { "text": "Reconnect display cable." }
+    }
+  },
+  "noChild": {
+    "text": "Are PSU cables connected?",
+    "yesChild": { "text": "Replace PSU — power fault." },
+    "noChild": { "text": "Connect power cables." }
+  }
+}

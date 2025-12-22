@@ -1,0 +1,41 @@
+{
+  "text": "Do you have administrator rights?",
+  "yesChild": {
+    "text": "Is there more than 1GB of disk space?",
+    "yesChild": {
+      "text": "Is the installer compatible with system (32/64 bit)?",
+      "yesChild": {
+        "text": "Is antivirus blocking installation?",
+        "yesChild": { "text": "Whitelist installer or disable antivirus." },
+        "noChild": {
+          "text": "Is installer file verified and complete?",
+          "yesChild": {
+            "text": "Does installation require internet access?",
+            "yesChild": {
+              "text": "Is internet stable?",
+              "yesChild": {
+                "text": "Are all dependencies installed?",
+                "yesChild": {
+                  "text": "Is operating system up to date?",
+                  "yesChild": {
+                    "text": "Does installer work on another PC?",
+                    "yesChild": { "text": "PC-specific OS issue — run repair." },
+                    "noChild": { "text": "Installer corrupt — re-download." }
+                  },
+                  "noChild": { "text": "Update operating system then retry." }
+                },
+                "noChild": { "text": "Install dependencies (e.g., .NET, VC++)." }
+              },
+              "noChild": { "text": "Fix or switch internet connection." }
+            },
+            "noChild": { "text": "Use offline installer package." }
+          },
+          "noChild": { "text": "Re-download the installer file." }
+        }
+      },
+      "noChild": { "text": "Use correct 32/64-bit installer." }
+    },
+    "noChild": { "text": "Free up disk space." }
+  },
+  "noChild": { "text": "Request admin permission." }
+}

@@ -1,0 +1,45 @@
+{
+  "text": "Is the mouse wireless?",
+  "yesChild": {
+    "text": "Are batteries working?",
+    "yesChild": {
+      "text": "Is the wireless receiver connected?",
+      "yesChild": {
+        "text": "Is the mouse paired to the PC?",
+        "yesChild": {
+          "text": "Does the mouse work on another surface?",
+          "yesChild": {
+            "text": "Is the mouse driver updated?",
+            "yesChild": {
+              "text": "Does another mouse work on this PC?",
+              "yesChild": { "text": "Mouse hardware failure — replace mouse." },
+              "noChild": { "text": "USB port failure — test new port." }
+            },
+            "noChild": { "text": "Update mouse driver." }
+          },
+          "noChild": { "text": "Use a proper mouse pad or surface." }
+        },
+        "noChild": { "text": "Pair mouse with PC." }
+      },
+      "noChild": { "text": "Insert or replace wireless receiver." }
+    },
+    "noChild": { "text": "Replace battery." }
+  },
+  "noChild": {
+    "text": "Is it a wired mouse?",
+    "yesChild": {
+      "text": "Is cable securely connected?",
+      "yesChild": {
+        "text": "Is USB port working?",
+        "yesChild": {
+          "text": "Does mouse work on another PC?",
+          "yesChild": { "text": "PC driver issue — reinstall driver." },
+          "noChild": { "text": "Mouse hardware defect — replace mouse." }
+        },
+        "noChild": { "text": "Try different USB port." }
+      },
+      "noChild": { "text": "Reconnect cable securely." }
+    },
+    "noChild": { "text": "Mouse not supported — replace device." }
+  }
+}

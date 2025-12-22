@@ -1,0 +1,37 @@
+{
+  "text": "Are speakers plugged in and powered?",
+  "yesChild": {
+    "text": "Is the audio source correct?",
+    "yesChild": {
+      "text": "Is volume level audible?",
+      "yesChild": {
+        "text": "Are speakers selected as output device?",
+        "yesChild": {
+          "text": "Is the mute option disabled?",
+          "yesChild": {
+            "text": "Does another app produce sound?",
+            "yesChild": {
+              "text": "Do headphones work when connected?",
+              "yesChild": {
+                "text": "Is audio driver updated?",
+                "yesChild": {
+                  "text": "Are audio cables firmly connected?",
+                  "yesChild": { "text": "Hardware fault — service required." },
+                  "noChild": { "text": "Reconnect audio cables securely." }
+                },
+                "noChild": { "text": "Update audio driver." }
+              },
+              "noChild": { "text": "Speaker hardware issue — replace speakers." }
+            },
+            "noChild": { "text": "App-specific issue — restart app." }
+          },
+          "noChild": { "text": "Unmute device and speaker settings." }
+        },
+        "noChild": { "text": "Select correct audio output device." }
+      },
+      "noChild": { "text": "Increase device and speaker volume." }
+    },
+    "noChild": { "text": "Switch to proper audio input source." }
+  },
+  "noChild": { "text": "Plug in and power ON speakers." }
+}
