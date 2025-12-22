@@ -3,48 +3,42 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Flash Troubleshooter</title>
+    <title>Troubleshooter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* scrollbar for chat pane */
         .chat-scroll::-webkit-scrollbar { height: 8px; }
         .chat-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 999px; }
     </style>
 </head>
-<body class="bg-purple-50 min-h-screen font-sans">
+<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
 <div class="max-w-2xl mx-auto h-screen flex flex-col">
     <!-- Top bar -->
-    <header class="bg-white/60 backdrop-blur-sm border-b border-purple-100 p-4 flex items-center justify-between">
+    <header class="bg-gray-800/60 border-b border-gray-700 p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
             <div class="text-2xl">⚡</div>
             <div class="text-lg font-semibold">Flash Troubleshooter</div>
         </div>
-        <div class="text-sm text-gray-600">Tree: <span th:text="${activeTree}">default</span></div>
+        <div class="text-sm text-gray-300">Tree: <span th:text="${activeTree}">default</span></div>
     </header>
 
     <!-- Chat area -->
     <main class="flex-1 overflow-hidden p-4">
-        <div class="h-full bg-white rounded-3xl shadow-inner p-4 flex flex-col">
+        <div class="h-full bg-gray-800 rounded-3xl shadow-inner p-4 flex flex-col">
             <div class="flex-1 overflow-auto chat-scroll p-2" id="chatPane">
                 <!-- If not started show welcome card + dropdown -->
                 <div th:if="${!isStarted}" class="mt-8">
-                    <div class="bg-white rounded-2xl p-6 shadow-md">
-                        <h2 class="text-xl font-semibold mb-2">Welcome — choose an issue to start</h2>
-                        <p class="text-sm text-gray-600 mb-4">Select from common troubleshooting trees.</p>
-                        <form th:action="@{/start}" method="post" class="flex gap-3">
-                            <select name="treeName" required class="flex-1 rounded-2xl p-3 bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-300">
-                                <option th:each="t : ${availableTrees}" th:value="${t}" th:text="${t}"></option>
-                            </select>
-                            <button class="bg-emerald-200 text-emerald-800 px-4 py-2 rounded-2xl font-semibold">Start</button>
-                        </form>
+                    <div class="bg-gray-900/60 border border-gray-700 rounded-2xl p-6 shadow-md">
+                        <h2 class="text-xl font-semibold mb-2 text-purple-200">Welcome — choose an issue to start</h2>
+                        <p class="text-sm text-gray-400 mb-4">Start typing below to search available trees.</p>
+                        <div class="text-sm text-gray-400">Or pick from suggestions shown above the input.</div>
                     </div>
                 </div>
 
                 <!-- If started show current node as a single message -->
                 <div th:if="${isStarted}">
                     <div class="mt-6">
-                        <div class="max-w-[85%] bg-emerald-100 text-emerald-900 rounded-2xl p-4 mb-4 shadow-sm">
-                            <div class="text-sm font-medium">System</div>
+                        <div class="max-w-[85%] bg-emerald-100/90 text-emerald-900 rounded-2xl p-4 mb-4 shadow-sm">
+                            <div class="text-sm font-medium text-emerald-800">System</div>
                             <div class="mt-2 text-lg" th:text="${node.text}">Question text</div>
                         </div>
                     </div>
@@ -54,58 +48,61 @@
         </div>
     </main>
 
-    <!-- Input / Keyboard area -->
-    <footer class="bg-transparent p-4">
+    <!-- Input / Keyboard area (single interaction zone) -->
+    <footer class="p-4">
         <div class="max-w-2xl mx-auto">
-            <!-- Single interaction zone -->
-            <div class="bg-white rounded-2xl p-4 shadow-lg">
-                <!-- If not started: show dropdown (also available above) -->
-                <div th:if="${!isStarted}">
-                    <form th:action="@{/start}" method="post" class="flex gap-3">
-                        <select name="treeName" required class="flex-1 rounded-2xl p-3 bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-300">
-                            <option th:each="t : ${availableTrees}" th:value="${t}" th:text="${t}"></option>
-                        </select>
-                        <button class="bg-emerald-300 text-emerald-800 px-4 py-2 rounded-2xl font-semibold">Start</button>
-                    </form>
-                </div>
-
-                <!-- If question: show YES/NO buttons -->
-                <div th:if="${isStarted} and ${isQuestion}" class="flex gap-3 justify-center">
-                    <form th:action="@{/decision}" method="post" class="flex-1">
-                        <input type="hidden" name="decision" value="yes"/>
-                        <button class="w-full bg-emerald-200 text-emerald-900 py-3 rounded-2xl font-bold">YES</button>
-                    </form>
-                    <form th:action="@{/decision}" method="post" class="flex-1">
-                        <input type="hidden" name="decision" value="no"/>
-                        <button class="w-full bg-pink-100 text-pink-700 py-3 rounded-2xl font-bold">NO</button>
-                    </form>
-                </div>
-
-                <!-- If solution: show Restart and admin expand toggle -->
-                <div th:if="${isStarted} and ${isSolution}" class="space-y-3">
+            <div class="bg-gray-900/60 border border-gray-700 rounded-2xl p-4 shadow-lg">
+                <!-- YES/NO row (full width buttons) -->
+                <div class="mb-3" th:if="${isStarted} and ${isQuestion}">
                     <div class="flex gap-3">
-                        <a th:href="@{/restart}" class="flex-1 text-center bg-purple-200 text-purple-800 py-3 rounded-2xl font-semibold">Restart</a>
-                        <button type="button" class="px-4 py-3 bg-white border rounded-2xl" data-bs-toggle="collapse" data-bs-target="#adminExpand">Improve</button>
+                        <form th:action="@{/decision}" method="post" class="flex-1">
+                            <input type="hidden" name="decision" value="yes" />
+                            <button class="w-full bg-emerald-600/20 text-emerald-300 py-3 rounded-2xl font-bold">YES</button>
+                        </form>
+                        <form th:action="@{/decision}" method="post" class="flex-1">
+                            <input type="hidden" name="decision" value="no" />
+                            <button class="w-full bg-pink-600/20 text-pink-300 py-3 rounded-2xl font-bold">NO</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Input with autocomplete suggestions -->
+                <div class="relative">
+                    <form th:action="@{/start}" method="post" id="startForm" class="flex gap-3">
+                        <input type="hidden" name="treeName" id="hiddenTreeName" />
+                        <input id="searchInput" name="searchInput" autocomplete="off" placeholder="Type to search issues or pick suggestion..." class="flex-1 rounded-2xl p-3 bg-gray-800 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-400" />
+                        <button id="startBtn" type="submit" class="bg-emerald-500 text-gray-900 px-4 py-2 rounded-2xl font-semibold">Load</button>
+                    </form>
+
+                    <!-- suggestion dropdown -->
+                    <ul id="suggestions" class="absolute left-0 right-0 mt-2 bg-gray-800 border border-gray-700 rounded-xl max-h-56 overflow-auto hidden z-50"></ul>
+                </div>
+
+                <!-- Solution controls -->
+                <div th:if="${isStarted} and ${isSolution}" class="mt-3">
+                    <div class="flex gap-3">
+                        <a th:href="@{/restart}" class="flex-1 text-center bg-purple-700 text-white py-3 rounded-2xl font-semibold">Restart</a>
+                        <button type="button" id="adminToggle" class="px-4 py-3 bg-gray-800 border border-gray-700 rounded-2xl">Improve</button>
                     </div>
 
                     <div id="adminExpand" class="mt-2 hidden">
-                        <div class="bg-gray-50 p-4 rounded-2xl border">
+                        <div class="bg-gray-900 p-4 rounded-2xl border border-gray-700">
                             <form th:action="@{/admin/expand}" method="post" class="space-y-3">
                                 <input type="hidden" name="targetLeafId" th:value="${node.id}" />
                                 <div>
-                                    <label class="block text-sm text-gray-600">New Question</label>
-                                    <input name="newQuestionText" required class="w-full rounded-2xl p-3 focus:ring-2 focus:ring-purple-300" />
+                                    <label class="block text-sm text-gray-400">New Question</label>
+                                    <input name="newQuestionText" required class="w-full rounded-2xl p-3 bg-gray-800 text-gray-100 focus:ring-2 focus:ring-purple-400" />
                                 </div>
                                 <div>
-                                    <label class="block text-sm text-gray-600">Yes Outcome</label>
-                                    <input name="yesSolText" required class="w-full rounded-2xl p-3 focus:ring-2 focus:ring-purple-300" />
+                                    <label class="block text-sm text-gray-400">Yes Outcome</label>
+                                    <input name="yesSolText" required class="w-full rounded-2xl p-3 bg-gray-800 text-gray-100 focus:ring-2 focus:ring-purple-400" />
                                 </div>
                                 <div>
-                                    <label class="block text-sm text-gray-600">No Outcome</label>
-                                    <input name="noSolText" required class="w-full rounded-2xl p-3 focus:ring-2 focus:ring-purple-300" />
+                                    <label class="block text-sm text-gray-400">No Outcome</label>
+                                    <input name="noSolText" required class="w-full rounded-2xl p-3 bg-gray-800 text-gray-100 focus:ring-2 focus:ring-purple-400" />
                                 </div>
                                 <div class="flex justify-end">
-                                    <button class="bg-emerald-200 text-emerald-800 px-4 py-2 rounded-2xl font-semibold">Apply</button>
+                                    <button class="bg-emerald-600 text-white px-4 py-2 rounded-2xl font-semibold">Apply</button>
                                 </div>
                             </form>
                         </div>
@@ -116,14 +113,65 @@
     </footer>
 </div>
 
-<!-- Minimal script to toggle admin collapse because we're not using Bootstrap JS for this template -->
+<!-- Scripts: autocomplete, suggestion rendering, admin toggle -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+    var trees = [[${availableTrees}]];
+/*]]>*/
+</script>
 <script>
-document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const target = document.querySelector(btn.getAttribute('data-bs-target'));
-    if(!target) return;
-    target.classList.toggle('hidden');
-  })
+// render suggestions
+const input = document.getElementById('searchInput');
+const sugg = document.getElementById('suggestions');
+const hidden = document.getElementById('hiddenTreeName');
+const startForm = document.getElementById('startForm');
+
+function showSuggestions(list) {
+    sugg.innerHTML = '';
+    if (!list.length) { sugg.classList.add('hidden'); return; }
+    list.slice(0,10).forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'px-4 py-2 hover:bg-gray-700 cursor-pointer text-sm';
+        li.textContent = item;
+        li.addEventListener('click', ()=>{
+            // set hidden and submit to start selected tree
+            hidden.value = item;
+            // submit form with treeName
+            const payload = new FormData();
+            payload.append('treeName', item);
+            fetch(startForm.getAttribute('action'), { method: 'post', body: payload })
+                .then(()=> window.location.reload());
+        });
+        sugg.appendChild(li);
+    });
+    sugg.classList.remove('hidden');
+}
+
+input && input.addEventListener('input', (e)=>{
+    const v = e.target.value.trim().toLowerCase();
+    if (!v) { sugg.classList.add('hidden'); hidden.value=''; return; }
+    const matches = trees.filter(t => t.toLowerCase().includes(v));
+    showSuggestions(matches);
+});
+
+// submit Load button: prefer explicit selection; if user typed exact filename, submit
+startForm && startForm.addEventListener('submit', (ev)=>{
+    if (hidden.value) return; // already set via selection
+    ev.preventDefault();
+    const v = input.value.trim();
+    if (!v) return;
+    // find best match
+    const match = trees.find(t=>t.toLowerCase()===v.toLowerCase()) || trees.find(t=>t.toLowerCase().includes(v.toLowerCase()));
+    if (match) {
+        const payload = new FormData(); payload.append('treeName', match);
+        fetch(startForm.getAttribute('action'), { method: 'post', body: payload })
+            .then(()=> window.location.reload());
+    }
+});
+
+// admin toggle
+document.getElementById('adminToggle')?.addEventListener('click', ()=>{
+    document.getElementById('adminExpand').classList.toggle('hidden');
 });
 </script>
 
