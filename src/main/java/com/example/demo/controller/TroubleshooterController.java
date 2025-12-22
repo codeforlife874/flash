@@ -24,10 +24,18 @@ public class TroubleshooterController {
 
     @GetMapping("/")
     public String index(HttpSession session, Model model) {
+        Boolean started = (Boolean) session.getAttribute("started");
+        if (started == null || !started) {
+            model.addAttribute("isStarted", false);
+            model.addAttribute("availableTrees", treeService.getAvailableTreeNames());
+            model.addAttribute("activeTree", treeService.getActiveTreeName());
+            return "index";
+        }
+
         String current = (String) session.getAttribute("currentNodeId");
         if (current == null || treeService.getNode(current) == null) {
+            session.setAttribute("currentNodeId", treeService.getRootNodeId());
             current = treeService.getRootNodeId();
-            session.setAttribute("currentNodeId", current);
         }
 
         DecisionNode node = treeService.getNode(current);
@@ -36,6 +44,7 @@ public class TroubleshooterController {
             node = treeService.getNode(treeService.getRootNodeId());
         }
 
+        model.addAttribute("isStarted", true);
         model.addAttribute("node", node);
         model.addAttribute("isQuestion", node instanceof QuestionNode);
         model.addAttribute("isSolution", node instanceof SolutionNode);
@@ -48,6 +57,16 @@ public class TroubleshooterController {
     public String selectTree(@RequestParam String treeName, HttpSession session) {
         boolean ok = treeService.selectTree(treeName);
         if (ok) {
+            session.setAttribute("currentNodeId", treeService.getRootNodeId());
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/start")
+    public String start(@RequestParam String treeName, HttpSession session) {
+        boolean ok = treeService.selectTree(treeName);
+        if (ok) {
+            session.setAttribute("started", true);
             session.setAttribute("currentNodeId", treeService.getRootNodeId());
         }
         return "redirect:/";
