@@ -1,221 +1,577 @@
 package com.example.demo.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.core.io.ClassPathResource;
+import com.example.demo.model.DecisionNode;
+import com.example.demo.model.QuestionNode;
+import com.example.demo.model.SolutionNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.DecisionNode;
-import com.example.demo.model.QuestionNode;
-import com.example.demo.model.SolutionNode;
-import com.example.demo.model.StoredTree;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class TreeService {
 
-    private final ConcurrentHashMap<String, DecisionNode> nodeRegistry = new ConcurrentHashMap<>();
-    private String rootNodeId;
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final Map<String, StoredTree> storedTrees = new LinkedHashMap<>();
-    private final Map<String, String> storedTreeLabels = new LinkedHashMap<>();
-    private String activeTreeName;
+    /*
+     * Stores every question/solution node from all trees.
+     *
+     * Example:
+     *
+     * 1-abc123 -> QuestionNode
+     * 1-def456 -> SolutionNode
+     * 2-xyz789 -> QuestionNode
+     */
+    private final ConcurrentHashMap<String, DecisionNode> nodeRegistry =
+            new ConcurrentHashMap<>();
 
+
+    /*
+     * Tree name -> root node ID
+     *
+     * Example:
+     *
+     * "1" -> "1-abc123"
+     * "2" -> "2-xyz789"
+     */
+    private final Map<String, String> treeRoots =
+            new LinkedHashMap<>();
+
+
+    /*
+     * Tree name -> user-friendly title
+     *
+     * Example:
+     *
+     * "1" -> "Is the router powered on?"
+     * "2" -> "Is the printer turning on?"
+     */
+    private final Map<String, String> treeTitles =
+            new LinkedHashMap<>();
+
+
+    private final ObjectMapper mapper =
+            new ObjectMapper();
+
+
+    /**
+     * Returns all nodes.
+     */
     public ConcurrentHashMap<String, DecisionNode> getNodeRegistry() {
         return nodeRegistry;
     }
 
-    public String getRootNodeId() {
-        return rootNodeId;
-    }
-
-    @PostConstruct
-    public void init() throws IOException {
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resolver.getResources("classpath*:data/*.json");
-
-        for (Resource res : resources) {
-            try {
-                com.fasterxml.jackson.databind.JsonNode root = mapper.readTree(res.getInputStream());
-                StoredTree stored = null;
-
-                // If file already in StoredTree shape
-                if (root.has("rootId") && root.has("nodes")) {
-                    stored = mapper.treeToValue(root, StoredTree.class);
-                } else {
-                    // attempt to convert nested yesChild/noChild tree into StoredTree
-                    stored = convertNestedTree(root);
-                }
-
-                if (stored != null) {
-                    String name = res.getFilename();
-                    storedTrees.put(name, stored);
-                    // compute a friendly label from the stored nodes (root node text)
-                    String label = computeLabelForStoredTree(stored);
-                    storedTreeLabels.put(name, label == null ? name : label);
-                }
-            } catch (Exception ex) {
-                // ignore malformed files for now
-            }
-        }
-
-        // fallback to single tree.json if no folder-based trees found
-        if (storedTrees.isEmpty()) {
-            ClassPathResource r = new ClassPathResource("tree.json");
-            if (r.exists()) {
-                StoredTree stored = mapper.readValue(r.getInputStream(), StoredTree.class);
-                if (stored != null) {
-                            storedTrees.put("tree.json", stored);
-                            storedTreeLabels.put("tree.json", computeLabelForStoredTree(stored));
-                        }
-            }
-        }
-
-        // choose first available tree as active
-        Optional<String> first = storedTrees.keySet().stream().findFirst();
-        if (first.isPresent()) {
-            selectTree(first.get());
-        }
-    }
-
-    private String computeLabelForStoredTree(StoredTree stored) {
-        if (stored == null) return null;
-        String rootId = stored.getRootId();
-        if (rootId == null) return null;
-        if (stored.getNodes() == null) return null;
-        for (DecisionNode n : stored.getNodes()) {
-            if (rootId.equals(n.getId())) {
-                String t = n.getText();
-                if (t == null) return null;
-                // shorten if very long
-                return t.length() > 60 ? t.substring(0, 57) + "..." : t;
-            }
-        }
-        return null;
-    }
 
     /**
-     * Selects a loaded tree by resource filename (e.g. mytree.json) and rebuilds the node registry.
+     * Returns the root node of the first loaded tree.
      */
-    public synchronized boolean selectTree(String treeResourceName) {
-        StoredTree stored = storedTrees.get(treeResourceName);
-        if (stored == null) return false;
-        // clear existing registry
-        nodeRegistry.clear();
-        rootNodeId = stored.getRootId();
+    public String getRootNodeId() {
 
-        Map<String, DecisionNode> temp = new HashMap<>();
-        if (stored.getNodes() != null) {
-            for (DecisionNode n : stored.getNodes()) {
-                temp.put(n.getId(), n);
-            }
+        if (treeRoots.isEmpty()) {
+            return null;
         }
 
-        Set<String> visited = new HashSet<>();
-        traverseAndRegister(rootNodeId, temp, visited);
-        activeTreeName = treeResourceName;
-        return true;
+        return treeRoots.values()
+                .iterator()
+                .next();
     }
 
-    private StoredTree convertNestedTree(com.fasterxml.jackson.databind.JsonNode root) {
-        if (root == null || !root.has("text")) return null;
 
-        Map<String, DecisionNode> temp = new HashMap<>();
+    /**
+     * Returns:
+     *
+     * tree name -> root node ID
+     */
+    public Map<String, String> getTreeRoots() {
+        return Collections.unmodifiableMap(treeRoots);
+    }
 
-        // recursive builder returns id of created node
-        java.util.function.BiFunction<com.fasterxml.jackson.databind.JsonNode, Map<String, DecisionNode>, String> build = new java.util.function.BiFunction<>() {
-            @Override
-            public String apply(com.fasterxml.jackson.databind.JsonNode node, Map<String, DecisionNode> map) {
-                String id = UUID.randomUUID().toString();
-                String text = node.has("text") ? node.get("text").asText() : "";
-                // leaf if no yesChild and noChild
-                if (!node.has("yesChild") && !node.has("noChild")) {
-                    SolutionNode s = new SolutionNode(id, text);
-                    map.put(id, s);
-                    return id;
-                }
 
-                String yesId = null;
-                String noId = null;
-                if (node.has("yesChild")) yesId = this.apply(node.get("yesChild"), map);
-                if (node.has("noChild")) noId = this.apply(node.get("noChild"), map);
+    /**
+     * Returns:
+     *
+     * tree name -> user-friendly title
+     */
+    public Map<String, String> getTreeTitles() {
+        return Collections.unmodifiableMap(treeTitles);
+    }
 
-                QuestionNode q = new QuestionNode(id, text, yesId, noId);
-                map.put(id, q);
-                return id;
+
+    /**
+     * Load all JSON troubleshooting trees from:
+     *
+     * src/main/resources/data/*.json
+     */
+    @PostConstruct
+    public void init() throws IOException {
+
+        PathMatchingResourcePatternResolver resolver =
+                new PathMatchingResourcePatternResolver();
+
+
+        Resource[] resources =
+                resolver.getResources(
+                        "classpath*:data/*.json"
+                );
+
+
+        /*
+         * Sort files numerically.
+         *
+         * Without this:
+         *
+         * 1.json
+         * 10.json
+         * 11.json
+         * 2.json
+         *
+         * With this:
+         *
+         * 1.json
+         * 2.json
+         * 3.json
+         * ...
+         * 20.json
+         */
+        Arrays.sort(
+                resources,
+                Comparator.comparingInt(resource -> {
+
+                    String filename =
+                            resource.getFilename();
+
+                    if (filename == null) {
+                        return Integer.MAX_VALUE;
+                    }
+
+                    try {
+
+                        return Integer.parseInt(
+                                filename.replace(
+                                        ".json",
+                                        ""
+                                )
+                        );
+
+                    } catch (NumberFormatException e) {
+
+                        return Integer.MAX_VALUE;
+                    }
+                })
+        );
+
+
+        /*
+         * Load every JSON file.
+         */
+        for (Resource resource : resources) {
+
+            String filename =
+                    resource.getFilename();
+
+
+            if (filename == null ||
+                    !filename.endsWith(".json")) {
+
+                continue;
             }
-        };
 
-        String rootId = build.apply(root, temp);
 
-        StoredTree st = new StoredTree();
-        st.setRootId(rootId);
-        st.setNodes(new ArrayList<>(temp.values()));
-        return st;
-    }
+            /*
+             * Example:
+             *
+             * 1.json -> 1
+             * 2.json -> 2
+             */
+            String treeName =
+                    filename.substring(
+                            0,
+                            filename.length() - 5
+                    );
 
-    private void traverseAndRegister(String nodeId, Map<String, DecisionNode> temp, Set<String> visited) {
-        if (nodeId == null || visited.contains(nodeId)) return;
-        DecisionNode node = temp.get(nodeId);
-        if (node == null) return;
-        visited.add(nodeId);
-        nodeRegistry.put(nodeId, node);
-        if (node instanceof QuestionNode) {
-            QuestionNode q = (QuestionNode) node;
-            traverseAndRegister(q.getYesNodeId(), temp, visited);
-            traverseAndRegister(q.getNoNodeId(), temp, visited);
+
+            /*
+             * Read the nested JSON.
+             */
+            JsonNode rootJson =
+                    mapper.readTree(
+                            resource.getInputStream()
+                    );
+
+
+            if (rootJson == null ||
+                    rootJson.isEmpty()) {
+
+                continue;
+            }
+
+
+            /*
+             * Convert the nested JSON into
+             * QuestionNode / SolutionNode objects.
+             */
+            String rootId =
+                    buildTree(
+                            treeName,
+                            rootJson
+                    );
+
+
+            /*
+             * Store the root ID.
+             */
+            treeRoots.put(
+                    treeName,
+                    rootId
+            );
+
+
+            /*
+             * Use the root question as the
+             * default title.
+             *
+             * Example:
+             *
+             * JSON:
+             *
+             * {
+             *   "text": "Is the router powered on?",
+             *   ...
+             * }
+             *
+             * Dropdown:
+             *
+             * Is the router powered on?
+             */
+            String title =
+                    rootJson
+                            .path("text")
+                            .asText(
+                                    "Troubleshooting Problem"
+                            );
+
+
+            treeTitles.put(
+                    treeName,
+                    title
+            );
         }
+
+
+        System.out.println(
+                "======================================"
+        );
+
+        System.out.println(
+                "Loaded troubleshooting trees: " +
+                treeRoots.keySet()
+        );
+
+        System.out.println(
+                "Loaded tree titles: " +
+                treeTitles
+        );
+
+        System.out.println(
+                "Total loaded nodes: " +
+                nodeRegistry.size()
+        );
+
+        System.out.println(
+                "======================================"
+        );
     }
 
-    public DecisionNode getNode(String id) {
+
+    /**
+     * Converts the nested JSON structure into
+     * QuestionNode and SolutionNode objects.
+     *
+     * Example JSON:
+     *
+     * {
+     *   "text": "Is the router powered on?",
+     *
+     *   "yesChild": {
+     *       "text": "Is the power LED stable?"
+     *   },
+     *
+     *   "noChild": {
+     *       "text": "Turn router ON."
+     *   }
+     * }
+     *
+     * becomes:
+     *
+     * QuestionNode
+     *      |
+     *      +---- YES -> QuestionNode
+     *      |
+     *      +---- NO  -> SolutionNode
+     */
+    private String buildTree(
+            String treeName,
+            JsonNode jsonNode) {
+
+
+        /*
+         * Give every node a unique ID.
+         */
+        String id =
+                treeName +
+                "-" +
+                UUID.randomUUID();
+
+
+        /*
+         * Get question/solution text.
+         */
+        String text =
+                jsonNode
+                        .path("text")
+                        .asText("");
+
+
+        /*
+         * Check whether this node has children.
+         */
+        boolean hasYesChild =
+                jsonNode.has("yesChild");
+
+
+        boolean hasNoChild =
+                jsonNode.has("noChild");
+
+
+        /*
+         * No children means this is a solution.
+         */
+        if (!hasYesChild &&
+                !hasNoChild) {
+
+            SolutionNode solution =
+                    new SolutionNode(
+                            id,
+                            text
+                    );
+
+
+            nodeRegistry.put(
+                    id,
+                    solution
+            );
+
+
+            return id;
+        }
+
+
+        /*
+         * Otherwise this is a question.
+         */
+        String yesId = null;
+
+        String noId = null;
+
+
+        /*
+         * Build YES branch.
+         */
+        if (hasYesChild) {
+
+            yesId =
+                    buildTree(
+                            treeName,
+                            jsonNode.get("yesChild")
+                    );
+        }
+
+
+        /*
+         * Build NO branch.
+         */
+        if (hasNoChild) {
+
+            noId =
+                    buildTree(
+                            treeName,
+                            jsonNode.get("noChild")
+                    );
+        }
+
+
+        /*
+         * Create the question node.
+         */
+        QuestionNode question =
+                new QuestionNode(
+                        id,
+                        text,
+                        yesId,
+                        noId
+                );
+
+
+        /*
+         * Store it.
+         */
+        nodeRegistry.put(
+                id,
+                question
+        );
+
+
+        return id;
+    }
+
+
+    /**
+     * Find a node by ID.
+     */
+    public DecisionNode getNode(
+            String id) {
+
+        if (id == null) {
+            return null;
+        }
+
         return nodeRegistry.get(id);
     }
 
-    public String getActiveTreeName() {
-        return activeTreeName;
+
+    /**
+     * Get the root node ID for a specific tree.
+     *
+     * Example:
+     *
+     * getTreeRoot("1")
+     */
+    public String getTreeRoot(
+            String treeName) {
+
+        if (treeName == null) {
+            return null;
+        }
+
+        return treeRoots.get(treeName);
     }
 
-    public Set<String> getAvailableTreeNames() {
-        return Collections.unmodifiableSet(storedTrees.keySet());
+
+    /**
+     * Get the user-friendly title of a tree.
+     */
+    public String getTreeTitle(
+            String treeName) {
+
+        return treeTitles.get(treeName);
     }
 
-    public Map<String, String> getAvailableTreeLabels() {
-        return Collections.unmodifiableMap(storedTreeLabels);
-    }
 
-    public synchronized boolean expandLeaf(String targetLeafId, String newQuestionText, String yesSolText, String noSolText) {
-        DecisionNode target = nodeRegistry.get(targetLeafId);
-        if (target == null || !(target instanceof SolutionNode)) {
+    /**
+     * Expand a solution into a new question.
+     *
+     * IMPORTANT:
+     *
+     * This currently changes the tree only in memory.
+     * It does NOT save the modification back to JSON.
+     */
+    public synchronized boolean expandLeaf(
+            String targetLeafId,
+            String newQuestionText,
+            String yesSolText,
+            String noSolText) {
+
+
+        /*
+         * Find the existing solution.
+         */
+        DecisionNode target =
+                nodeRegistry.get(
+                        targetLeafId
+                );
+
+
+        /*
+         * Make sure it really is a solution.
+         */
+        if (target == null ||
+                !(target instanceof SolutionNode)) {
+
             return false;
         }
 
-        // create new solution nodes
-        String yesId = UUID.randomUUID().toString();
-        String noId = UUID.randomUUID().toString();
-        SolutionNode yesNode = new SolutionNode(yesId, yesSolText);
-        SolutionNode noNode = new SolutionNode(noId, noSolText);
 
-        // create new question node with same id as the target leaf
-        QuestionNode questionNode = new QuestionNode(targetLeafId, newQuestionText, yesId, noId);
+        /*
+         * Create YES solution.
+         */
+        String yesId =
+                UUID.randomUUID().toString();
 
-        // atomic-ish update
-        nodeRegistry.put(yesId, yesNode);
-        nodeRegistry.put(noId, noNode);
-        nodeRegistry.put(targetLeafId, questionNode);
+
+        SolutionNode yesNode =
+                new SolutionNode(
+                        yesId,
+                        yesSolText
+                );
+
+
+        /*
+         * Create NO solution.
+         */
+        String noId =
+                UUID.randomUUID().toString();
+
+
+        SolutionNode noNode =
+                new SolutionNode(
+                        noId,
+                        noSolText
+                );
+
+
+        /*
+         * Replace the old solution with
+         * a new question.
+         *
+         * The ID remains the same so that
+         * the parent doesn't need to change.
+         */
+        QuestionNode questionNode =
+                new QuestionNode(
+                        targetLeafId,
+                        newQuestionText,
+                        yesId,
+                        noId
+                );
+
+
+        /*
+         * Add the new nodes.
+         */
+        nodeRegistry.put(
+                yesId,
+                yesNode
+        );
+
+
+        nodeRegistry.put(
+                noId,
+                noNode
+        );
+
+
+        /*
+         * Replace the solution.
+         */
+        nodeRegistry.put(
+                targetLeafId,
+                questionNode
+        );
+
 
         return true;
     }
